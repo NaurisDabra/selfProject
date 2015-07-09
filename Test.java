@@ -3,29 +3,32 @@ package selfProject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Test {
+import javax.swing.JFrame;
+
+public class Test{
 
 	public static void main(String[] args) {
-		CarPark autoplacis = new CarPark(1, "autoplacis", "Riga", new Manager("Janis", "Ozols", 40, 500.00));
+		CarPark autoplacis = new CarPark(1, "autoplacis", "Riga", new Manager(1,"Janis", "Ozols", 40, 500.00));
 		Manager menedzeris = autoplacis.getManager();
-		menedzeris.hireEmployee(new Salesperson("Nauris", "Dabra", 23, 200), autoplacis);
-		menedzeris.hireEmployee(new Supplier("Oskars", "Vacietis", 26, 300), autoplacis);
+		menedzeris.hireEmployee(new Salesperson(2,"Nauris", "Dabra", 23, 200), autoplacis);
+		menedzeris.hireEmployee(new Supplier(3, "Oskars", "Vacietis", 26, 300), autoplacis);
 		List<Employee> darbinieki = autoplacis.getEmployeeList();
 		List<Salesperson> pardeveji = new ArrayList<Salesperson>();
 		List<Supplier> piegadataji = new ArrayList<Supplier>();
 		Salesperson pardevejs = null;
 		Supplier piegadatajs = null;
+        
 		for (int i = 0; i < darbinieki.size(); i++) {
-			if (darbinieki.get(i).getClass() == Salesperson.class) {
-				pardeveji.add((Salesperson) darbinieki.get(i));
-				pardevejs = (Salesperson) darbinieki.get(i);
-
-			}
-			if (darbinieki.get(i).getClass() == Supplier.class) {
-				piegadataji.add((Supplier) darbinieki.get(i));
-				piegadatajs = (Supplier) (darbinieki.get(i));
-			}
-
+//			if (darbinieki.get(i).getClass() == Salesperson.class) {
+//				pardeveji.add((Salesperson) darbinieki.get(i));
+//				pardevejs = (Salesperson) darbinieki.get(i);
+//
+//			}
+//			if (darbinieki.get(i).getClass() == Supplier.class) {
+//				piegadataji.add((Supplier) darbinieki.get(i));
+//				piegadatajs = (Supplier) (darbinieki.get(i));
+//			}
+			Employee e = darbinieki.get(i);
 		}
 
 		Vehicle auto1 = new SportsCar(1, "Mustangs kautkads", 50000.0, 2, 0, 250, true);
@@ -46,7 +49,7 @@ public class Test {
 		pardevejs.sellVehicle(auto3, autoplacis);
 		pardevejs.sellVehicle(bike1, autoplacis);
 		pardevejs.requestCleaning(auto4);
-		Cleaner mrCleanIt = new Cleaner("Janis", "Tirais", 50, 100.00);
+		Cleaner mrCleanIt = new Cleaner(4, "Janis", "Tirais", 50, 100.00);
 		menedzeris.hireEmployee(mrCleanIt, autoplacis);
 		mrCleanIt.cleanVehicle(auto4);
 		mrCleanIt.cleanVehicle(auto1);
@@ -54,7 +57,7 @@ public class Test {
 		List<Vehicle> result=autoplacis.search(90000.0);
 		System.out.println("Search results:\nEntries found: "+result.size());
 		for(int i=0;i<result.size();i++){
-			System.out.println(result.get(i).toString());}
+			System.out.println("\n"+result.get(i).toString());}
 	}
 
 }

@@ -13,6 +13,7 @@ public class CarPark {
 	private Manager manager;
 	private List<Employee> employeeList;
 	private double profit;
+	//private List<Class> employeeTypes;
 
 	public CarPark() {
 	}
@@ -26,6 +27,7 @@ public class CarPark {
 		this.manager = manager;
 		this.employeeList = new ArrayList<Employee>(employeeList);
 		profit = 0;
+		//employeeTypes = new ArrayList<Class>();
 	}
 
 	public CarPark(int ID, String name, String address, Manager manager) {
@@ -43,7 +45,19 @@ public class CarPark {
 		boolean result = allVehicles.remove(vehicle);
 		return result;
 	}
-
+	public void addEmployeeType(Employee employee){
+		
+		System.out.println(employee.getClass());
+	}
+	/*public List<Class> returnEmployeeByType(Class klase){
+		Class jauna = klase.getClass();
+		List<Class<>> result = new ArrayList<Class>();
+		for(int i=0;i<employeeList.size();i++){
+			if(employeeList.get(i).getClass()==klase)
+				result.add(employeeList.get(i));
+		}
+		return result;
+	}*/
 	public List<Vehicle> getAllVehicles() {
 		return allVehicles;
 	}

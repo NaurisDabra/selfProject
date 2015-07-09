@@ -1,5 +1,7 @@
 package selfProject;
 
+import java.util.List;
+
 //TODO @Entity
 public abstract class Employee {
 	private String name;
@@ -7,14 +9,17 @@ public abstract class Employee {
 	// TODO CarPark carPark;
 	private String surname;
 	private int age;
-	double salary;
-
+	private double salary;
+	private int ID;
+	private List<Employee> categoryList;
+	
 	// TODO @Id @GeneratedValue(strategy=GenerationType.IDENTITY
 	// TODO private long ID;
 	public Employee() {
 	}
 
-	public Employee(String name, String surname, int age, double salary) {
+	public Employee(int ID, String name, String surname, int age, double salary) {
+		this.ID=ID;
 		this.name = name;
 		this.surname = surname;
 		this.age = age;
@@ -54,6 +59,6 @@ public abstract class Employee {
 	}
 
 	public String toString() {
-		return "Name: " + name + "\nSurname: " + surname + "\nAge: " + age + "\nSalary: " + salary;
+		return "ID: "+ID+"\nName: " + name + "\nSurname: " + surname + "\nAge: " + age + "\nSalary: " + salary;
 	}
 }

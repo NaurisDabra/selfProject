@@ -5,8 +5,8 @@ public class Cleaner extends Employee {
 	public Cleaner() {
 	}
 
-	public Cleaner(String name, String surname, int age, double salary) {
-		super(name, surname, age, salary);
+	public Cleaner(int ID, String name, String surname, int age, double salary) {
+		super(ID, name, surname, age, salary);
 	}
 
 	public void cleanVehicle(Vehicle vehicle) {
