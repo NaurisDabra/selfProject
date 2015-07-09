@@ -19,7 +19,7 @@ public class Test {
 			if (darbinieki.get(i).getClass() == Salesperson.class) {
 				pardeveji.add((Salesperson) darbinieki.get(i));
 				pardevejs = (Salesperson) darbinieki.get(i);
-			
+
 			}
 			if (darbinieki.get(i).getClass() == Supplier.class) {
 				piegadataji.add((Supplier) darbinieki.get(i));
@@ -27,14 +27,34 @@ public class Test {
 			}
 
 		}
-		Vehicle auto1 = new SportsCar(1, "Mustangs kautkads", 20000.0, 250);
-		Vehicle auto2 = new FamilyCar(2, "Honda", 20000.0, 500);
-		piegadatajs.supplyCar(auto1,autoplacis);
-		piegadatajs.supplyCar(auto2,autoplacis);
-		
-		//pardevejs.sellVehicle(auto2, autoplacis);
-		
+
+		Vehicle auto1 = new SportsCar(1, "Mustangs kautkads", 50000.0, 2, 0, 250, true);
+		Vehicle auto2 = new Car(2, "Honda", 20000.0, 4, 500);
+		Vehicle auto3 = new SportsCar(3, "Ferrari", 200000.0, 2, 0, 300, false);
+		Vehicle auto4 = new Car(4, "Honda", 20000.0, 6, 500);
+		Vehicle auto5 = new SportsCar(5, "Ferrari", 200000.0, 2, 0, 300, false);
+		Vehicle bike1 = new SportsBike(5, "Suzuki", 10000.0, 100, 200, "lightweight");
+		Vehicle bike2 = new SportsBike(6, "Suzuki", 15000.0, 100, 200, "lghtweight");
+		piegadatajs.supplyCar(auto1, autoplacis);
+		piegadatajs.supplyCar(auto2, autoplacis);
+		piegadatajs.supplyCar(auto3, autoplacis);
+		piegadatajs.supplyCar(auto4, autoplacis);
+		piegadatajs.supplyCar(auto5, autoplacis);
+		piegadatajs.supplyCar(bike1, autoplacis);
+		piegadatajs.supplyCar(bike2, autoplacis);
+		pardevejs.sellVehicle(auto2, autoplacis);
+		pardevejs.sellVehicle(auto3, autoplacis);
+		pardevejs.sellVehicle(bike1, autoplacis);
+		pardevejs.requestCleaning(auto4);
+		Cleaner mrCleanIt = new Cleaner("Janis", "Tirais", 50, 100.00);
+		menedzeris.hireEmployee(mrCleanIt, autoplacis);
+		mrCleanIt.cleanVehicle(auto4);
+		mrCleanIt.cleanVehicle(auto1);
 		System.out.println(autoplacis);
+		List<Vehicle> result=autoplacis.search(90000.0);
+		System.out.println("Search results:\nEntries found: "+result.size());
+		for(int i=0;i<result.size();i++){
+			System.out.println(result.get(i).toString());}
 	}
 
 }

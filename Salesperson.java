@@ -31,13 +31,16 @@ private List<Vehicle> soldVehicles;
 	public void sellVehicle(Vehicle vehicle, CarPark carPark){
 		soldVehicles.add(vehicle);
 		vehicleCount++;
+		carPark.carSold(vehicle.getPrice());
 		boolean result = carPark.removeVehicle(vehicle);
 		if(result){
 			System.out.println("Vehicle removed");
 		}
 		else System.out.println("Failed to remove vehicle");
 	}
-	
+	public void requestCleaning(Vehicle vehicle){
+		vehicle.setDirty(true);
+	}
 	public String toString(){
 		return super.toString()+"\nHas sold "+ vehicleCount+" vehicles";
 	}
