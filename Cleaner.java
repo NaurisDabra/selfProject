@@ -15,5 +15,8 @@ public class Cleaner extends Employee {
 		else
 			System.out.println("Cleaning not needed");
 	}
+	public void cleanCarPark() {//TODO
+		}
+	
 
 }

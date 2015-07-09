@@ -1,14 +1,14 @@
 package selfProject;
 
 public class SportsCar extends Car {
-	private float maxSpeed;
+	private int maxSpeed;
 	private boolean streetLegal;
 
 	public SportsCar() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public SportsCar(int ID, String name, double price, int numberOfSeats, float trunkVolume, float maxSpeed,
+	public SportsCar(int ID, String name, double price, int numberOfSeats, float trunkVolume, int maxSpeed,
 			boolean streetLegal) {
 		super(ID, name, price, numberOfSeats, trunkVolume);
 		this.maxSpeed = maxSpeed;
