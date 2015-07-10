@@ -11,8 +11,8 @@ public abstract class Employee {
 	private int age;
 	private double salary;
 	private int ID;
-	private List<Employee> categoryList;
-	
+	private CarPark carPark;
+	private String profession;
 	// TODO @Id @GeneratedValue(strategy=GenerationType.IDENTITY
 	// TODO private long ID;
 	public Employee() {
@@ -24,6 +24,7 @@ public abstract class Employee {
 		this.surname = surname;
 		this.age = age;
 		this.salary = salary;
+		
 	}
 
 	public String getName() {
@@ -57,7 +58,18 @@ public abstract class Employee {
 	public void setSalary(double salary) {
 		this.salary = salary;
 	}
-
+  public void setCarPark(CarPark carPark){
+	  this.carPark=carPark;
+  }
+  public CarPark getCarPark(){
+	  return carPark;
+  }
+  public void setProfession(String profession){
+	  this.profession=profession;
+  }
+  public String getProfession(){
+	  return profession;
+  }
 	public String toString() {
 		return "ID: "+ID+"\nName: " + name + "\nSurname: " + surname + "\nAge: " + age + "\nSalary: " + salary;
 	}

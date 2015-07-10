@@ -6,6 +6,8 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -16,8 +18,9 @@ import javax.swing.JTextField;
 import sef.module14.sample.ComplexFrame;
 
 public class GUI extends JFrame implements ActionListener{
-	private CarPark carPark;
+	private List<CarPark> carPark=new ArrayList<CarPark>();
 	private JButton addButton;
+	
 	JTextField IDInput, nameInput, addressInput, mNameInput, mSurnameInput, mAgeInput, mSalaryInput;
 	JLabel IDLabel, nameLabel, addressLabel, mNameLabel, mSurnameLabel, mAgeLabel, mSalaryLabel, textLabel;
 	public GUI() {
@@ -84,7 +87,7 @@ public class GUI extends JFrame implements ActionListener{
 		pane.add(panel4);
 		pane.add(panel5);
 		pane.add(panel6);
-		setLocation(300,300);
+		setLocation(200,300);
 		setSize(1200,300);
 		setResizable(false);
 		setVisible(true);
@@ -97,8 +100,8 @@ public class GUI extends JFrame implements ActionListener{
 			System.out.println("called");
 			if(!IDInput.getText().isEmpty()&& !nameInput.getText().isEmpty()&& !addressInput.getText().isEmpty()&& !mNameInput.getText().isEmpty()&& !mSurnameInput.getText().isEmpty()&& !mAgeInput.getText().isEmpty()&& !mSalaryInput.getText().isEmpty()){
 				try{
-				carPark=new CarPark(Integer.parseInt(IDInput.getText()), nameInput.getText(), addressInput.getText(), new Manager(1,mNameInput.getText(), mSurnameInput.getText(), Integer.parseInt(mAgeInput.getText()), Double.parseDouble(mSalaryInput.getText())));
-		textLabel.setText(carPark.toString());}
+				carPark.add(new CarPark(Integer.parseInt(IDInput.getText()), nameInput.getText(), addressInput.getText(), new Manager(1,mNameInput.getText(), mSurnameInput.getText(), Integer.parseInt(mAgeInput.getText()), Double.parseDouble(mSalaryInput.getText()))));
+		textLabel.setText(String.valueOf(carPark.size()));}
 				catch(Exception e){
 					textLabel.setText("Nepareizi dati");
 				}

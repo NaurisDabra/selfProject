@@ -16,6 +16,7 @@ public class Salesperson extends Employee {
 	public Salesperson(int ID, String name, String surname, int age, double salary) {
 		super(ID, name, surname, age, salary);
 		soldVehicles = new ArrayList<Vehicle>();
+		this.setProfession("Salesperson");
 		// TODO Auto-generated constructor stub
 	}
 
@@ -35,11 +36,11 @@ public class Salesperson extends Employee {
 		this.soldVehicles = new ArrayList<Vehicle>(soldVehicles);
 	}
 
-	public void sellVehicle(Vehicle vehicle, CarPark carPark) {
+	public void sellVehicle(Vehicle vehicle) {
 		soldVehicles.add(vehicle);
 		vehicleCount++;
-		carPark.carSold(vehicle.getPrice());
-		boolean result = carPark.removeVehicle(vehicle);
+		this.getCarPark().carSold(vehicle.getPrice());
+		boolean result = this.getCarPark().removeVehicle(vehicle);
 		if (result) {
 			System.out.println("Vehicle removed");
 		} else

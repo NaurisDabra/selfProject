@@ -7,6 +7,7 @@ public class Cleaner extends Employee {
 
 	public Cleaner(int ID, String name, String surname, int age, double salary) {
 		super(ID, name, surname, age, salary);
+		this.setProfession("Cleaner");
 	}
 
 	public void cleanVehicle(Vehicle vehicle) {
@@ -18,5 +19,5 @@ public class Cleaner extends Employee {
 	public void cleanCarPark() {//TODO
 		}
 	
-
+	
 }
