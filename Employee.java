@@ -1,6 +1,6 @@
 package selfProject;
 
-import java.util.List;
+
 
 //TODO @Entity
 public abstract class Employee {

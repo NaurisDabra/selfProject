@@ -37,6 +37,23 @@ public class CarPark {
 		// employeeTypes = new ArrayList<Class>();
 	}
 
+	public CarPark(int ID, String name, String address) {
+		this.ID = ID;
+		this.name = name;
+		this.address = address;
+		this.allVehicles = new ArrayList<Vehicle>();
+	
+		managerList = new ArrayList<Manager>();
+	
+		salepersonList = new ArrayList<Salesperson>();
+		cleanerList = new ArrayList<Cleaner>();
+		supplierList = new ArrayList<Supplier>();
+		profit = 0;
+		// employeeTypes = new ArrayList<Class>();
+	}
+	public void addManager(Manager manager){
+		managerList.add(manager);
+	}
 	// public CarPark(int ID, String name, String address, Manager manager) {
 	// this.ID = ID;
 	// this.name = name;
@@ -112,8 +129,9 @@ public class CarPark {
 
 	public String printVehicles() {
 		String text = "";
+		if(allVehicles.size()>0){
 		for (int i = 0; i < allVehicles.size(); i++)
-			text += allVehicles.get(i).toString() + "\n\n";
+			text += allVehicles.get(i).toString() + "\n\n";}
 		return text;
 	}
 
@@ -155,6 +173,6 @@ public class CarPark {
 
 	public String toString() {
 		return "Nosaukums: " + name + "\nAdresse: " + address + "\n\nHas earned: " + profit + "\n\nMenedzeris: \n"
-				+ manager + "\n\nDarbinieki:\n" + printEmployees() + "\nAuto:\n" + printVehicles();
+				+ manager + "\n\nDarbinieki:\n" + printEmployees() +  printVehicles();
 	}
 }

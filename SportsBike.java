@@ -5,7 +5,7 @@ import java.util.Arrays;
 public class SportsBike extends Bike {
 	private int maxSpeed;
 	private String classification;
-	private final static String[] possibleClassifications = { "lightweight", "middleweight", "superbike" };
+	private final static String[] possibleClassifications = { "Lightweight", "Middleweight", "Superbike" };
 
 	public SportsBike() {
 		// TODO Auto-generated constructor stub
