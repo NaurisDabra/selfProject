@@ -3,7 +3,7 @@ package selfProject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CarPark {
+public class CarPark{
 	// TODO @Id @GeneratedValue(strategy=GenerationType.IDENTITY
 	// TODO private long ID;
 	private int ID;
@@ -17,8 +17,8 @@ public class CarPark {
 	private List<Cleaner> cleanerList;
 	private List<Supplier> supplierList;
 	private final String[] professions = { "Manager", "Salesperson", "Supplier", "Cleaner" };
+	private final int MANAGER=0, SALESPERSON=1, SUPPLIER=2, CLEANER=3;
 	// private List<Class> employeeTypes;
-
 	public CarPark() {
 	}
 
@@ -97,25 +97,25 @@ public class CarPark {
 	}
 
 	public void addEmployee(Employee employee) {
-		if (employee.getProfession() == professions[0])
+		if (employee.getProfession() == professions[MANAGER])
 			managerList.add((Manager) employee);
-		if (employee.getProfession() == professions[1])
+		if (employee.getProfession() == professions[SALESPERSON])
 			salepersonList.add((Salesperson) employee);
-		if (employee.getProfession() == professions[2])
+		if (employee.getProfession() == professions[SUPPLIER])
 			supplierList.add((Supplier) employee);
-		if (employee.getProfession() == professions[3])
+		if (employee.getProfession() == professions[CLEANER])
 			cleanerList.add((Cleaner) employee);
 
 	}
 
 	public void removeEmployee(Employee employee) {
-		if (employee.getProfession() == professions[0])
+		if (employee.getProfession() == professions[MANAGER])
 			managerList.remove(employee);
-		if (employee.getProfession() == professions[1])
+		if (employee.getProfession() == professions[SALESPERSON])
 			salepersonList.remove(employee);
-		if (employee.getProfession() == professions[2])
+		if (employee.getProfession() == professions[SUPPLIER])
 			supplierList.remove(employee);
-		if (employee.getProfession() == professions[3])
+		if (employee.getProfession() == professions[CLEANER])
 			cleanerList.remove(employee);
 	}
 
@@ -130,29 +130,29 @@ public class CarPark {
 	public String printVehicles() {
 		String text = "";
 		if(allVehicles.size()>0){
+			text="Vehicles:\n";
 		for (int i = 0; i < allVehicles.size(); i++)
 			text += allVehicles.get(i).toString() + "\n\n";}
 		return text;
 	}
-
+	
+	public String printEmployeeList(List employee){
+		String text="";
+		if(!employee.isEmpty())
+			text=((Employee) employee.get(0)).getProfession()+"\n";
+		for(int i=0;i<employee.size();i++)
+			text+=employee.get(i).toString()+"\n\n";
+		return text;
+	}
+	
 	public String printEmployees() {
 		String text = "";
-		if(managerList.size()>0){
-		text += "Managers\n";
-		for (int i = 0; i < managerList.size(); i++)
-			text += managerList.get(i).toString() + "\n\n";}
-		if(salepersonList.size()>0){
-		text += "Salepersons\n";
-		for (int i = 0; i < salepersonList.size(); i++)
-			text += salepersonList.get(i).toString() + "\n\n";}
-		if(supplierList.size()>0){
-		text += "Suppliers\n";
-		for (int i = 0; i < supplierList.size(); i++)
-			text += supplierList.get(i).toString() + "\n\n";}
-		if(cleanerList.size()>0){
-		text += "Cleaners\n";
-		for (int i = 0; i < cleanerList.size(); i++)
-			text += cleanerList.get(i).toString() + "\n\n";}
+	
+		text+=printEmployeeList(managerList);
+		text+=printEmployeeList(salepersonList);
+		text+=printEmployeeList(supplierList);
+		text+=printEmployeeList(cleanerList);
+		
 		return text;
 	}
 

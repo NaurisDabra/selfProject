@@ -5,6 +5,8 @@ import java.awt.CardLayout;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Label;
 import java.awt.event.ActionEvent;
@@ -24,6 +26,7 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -34,6 +37,10 @@ import javax.swing.event.ListSelectionListener;
 import sef.module14.sample.ComplexFrame;
 
 public class GUI extends JFrame {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -9030761986750170413L;
 	static CarPark autoplacis;
 	static Manager menedzeris;
 	List<Employee> employeeList;
@@ -45,9 +52,9 @@ public class GUI extends JFrame {
 	JList listActions;
 	JPanel centerPanel;
 	JTextField nameF, surnameF, ageF, salaryF;
-	JComboBox professionsBox,suppBox;
+	JComboBox professionsBox, suppBox;
 	JButton actionB;
-	final String[] data = { "Hire employee", "Fire employee", "Car delivered", "Car sold", "Company info" };
+	final String[] data = { "Hire employee", "Fire employee", "Employee list", "Car delivered", "Car sold", "Car list", "Company info" };
 	final String[] professions = { "Manager", "Salesperson", "Supplier", "Cleaner" };
 
 	public void dataInit() {
@@ -60,6 +67,7 @@ public class GUI extends JFrame {
 		employeeList.addAll(salepersonList);
 		employeeList.addAll(supplierList);
 		employeeList.addAll(cleanerList);
+		menedzeris=managerList.get(0);
 
 	}
 
@@ -67,11 +75,12 @@ public class GUI extends JFrame {
 	public void setUp() {
 		autoplacis = new CarPark(1, "autoplacis", "Riga");
 		menedzeris = new Manager(1, "Janis", "Ozols", 40, 500.00, autoplacis);
+		autoplacis.setManager(menedzeris);
 		autoplacis.addManager(menedzeris);
 		menedzeris.hireEmployee(new Salesperson(2, "Nauris", "Dabra", 23, 200));
 		menedzeris.hireEmployee(new Supplier(3, "Oskars", "Vacietis", 26, 300));
 		menedzeris.hireEmployee(new Cleaner(4, "Janis", "Tirais", 50, 100.00));
-		
+
 		Vehicle auto1 = new SportsCar(1, "Mustangs kautkads", 50000.0, 2, 0, 250, true);
 		Vehicle auto2 = new Car(2, "Honda", 20000.0, 4, 500);
 		Vehicle auto3 = new SportsCar(3, "Ferrari", 200000.0, 2, 0, 300, false);
@@ -91,12 +100,12 @@ public class GUI extends JFrame {
 		piegadatajs.supplyCar(bike1);
 		piegadatajs.supplyCar(bike2);
 
-		
 	}
 
 	public GUI() {
 
 		setUp();
+		dataInit();
 		/**
 		 * Plans, vienam autoparkam Lietotajs ir gramatvedis/menedzeris var
 		 * noalgot darbiniekus ierakstot veertibas var atlaist izveloties no
@@ -114,10 +123,14 @@ public class GUI extends JFrame {
 		// TODO Auto-generated constructor stub
 		Container pane = getContentPane();
 		pane.setLayout(new BorderLayout());
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		listActions = new JList(data); // data has type Object[]
 		listActions.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		// list.setLayoutOrientation(JList.HORIZONTAL_WRAP);
 		listActions.setVisibleRowCount(-2);
+		listActions.setMinimumSize(new Dimension(150, 400));
+		listActions.setPreferredSize(new Dimension(150, 400));
+		listActions.setFont(new Font("Serif", Font.PLAIN, 16));
 		listActions.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
 				if (!e.getValueIsAdjusting()) {
@@ -133,25 +146,39 @@ public class GUI extends JFrame {
 						centerPanel = new FirePanel();
 						pane.add(centerPanel, BorderLayout.CENTER);
 						pack();
-						
+
 						break;
 					case 2:
 						pane.remove(centerPanel);
-						centerPanel = new VehicleBought();
-						
+						centerPanel = new EmployeeListPanel();
 						pane.add(centerPanel, BorderLayout.CENTER);
 						pack();
 						break;
 					case 3:
-						
+						pane.remove(centerPanel);
+						centerPanel = new VehicleBought();
+
+						pane.add(centerPanel, BorderLayout.CENTER);
+						pack();
+						break;
+					case 4:
+
 						pane.remove(centerPanel);
 						centerPanel = new CarSold();
 						pane.add(centerPanel, BorderLayout.CENTER);
 						pack();
 						break;
-					case 4:
+					case 5:
 						pane.remove(centerPanel);
-						
+						centerPanel = new CarListPanel();
+						pane.add(centerPanel, BorderLayout.CENTER);
+						pack();
+						break;
+					case 6:
+						pane.remove(centerPanel);
+						centerPanel = new InfoPanel();
+						pane.add(centerPanel, BorderLayout.CENTER);
+						pack();
 						break;
 					default:
 						System.out.println("Oops");
@@ -163,11 +190,13 @@ public class GUI extends JFrame {
 		});
 
 		JLabel title = new JLabel("Carpark control panel");
-		title.setAlignmentX(Label.CENTER);
+		title.setHorizontalAlignment(JLabel.CENTER);
+		title.setVerticalAlignment(JLabel.CENTER);
+		title.setFont(new Font("Serif", Font.PLAIN, 18));
 		centerPanel = new JPanel();
 		centerPanel.setLayout(new BorderLayout());
 		pane.add(listActions, BorderLayout.WEST);
-		pane.add(new JLabel("Carpark control panel"), BorderLayout.NORTH);
+		pane.add(title, BorderLayout.NORTH);
 		pane.add(centerPanel, BorderLayout.CENTER);
 		setMinimumSize(new Dimension(400, 400));
 		setLocation(720, 200);
@@ -180,7 +209,76 @@ public class GUI extends JFrame {
 		new GUI();
 	}
 
+	public static String convertToMultiline(String orig) {
+		return "<html>" + orig.replaceAll("\n", "<br>")+"</html>";
+	}
+
+	class InfoPanel extends JPanel {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 3472043302845663500L;
+
+		public InfoPanel() {
+			setLayout(new GridLayout(1, 1));
+			dataInit();
+			String texts =autoplacis.toString();
+			JTextArea info = new JTextArea(texts);
+			info.setLineWrap(true);
+			info.setEditable(false);
+			// info.setPreferredSize(centerPanel.getSize());
+			JScrollPane scroller = new JScrollPane(info, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+					JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        //info.setPreferredSize(new Dimension(20, 110));
+			setPreferredSize(new Dimension(450, 110));
+			scroller.setPreferredSize(new Dimension((int) centerPanel.getSize().getWidth(),200));
+			add(scroller);
+
+			
+
+		}
+	}
+class EmployeeListPanel extends JPanel{
+	public EmployeeListPanel(){
+		setLayout(new GridLayout(1, 1));
+		dataInit();
+		String texts =autoplacis.printEmployees();
+		JTextArea info = new JTextArea(texts);
+		info.setLineWrap(true);
+		info.setEditable(false);
+		// info.setPreferredSize(centerPanel.getSize());
+		JScrollPane scroller = new JScrollPane(info, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+    //info.setPreferredSize(new Dimension(20, 110));
+		setPreferredSize(new Dimension(450, 110));
+		scroller.setPreferredSize(new Dimension((int) centerPanel.getSize().getWidth(),200));
+		add(scroller);
+	}
+	
+}
+class CarListPanel extends JPanel{
+	public CarListPanel(){
+		setLayout(new GridLayout(1, 1));
+		dataInit();
+		String texts =autoplacis.printVehicles();
+		JTextArea info = new JTextArea(texts);
+		info.setLineWrap(true);
+		info.setEditable(false);
+		// info.setPreferredSize(centerPanel.getSize());
+		JScrollPane scroller = new JScrollPane(info, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+    //info.setPreferredSize(new Dimension(20, 110));
+		setPreferredSize(new Dimension(450, 110));
+		scroller.setPreferredSize(new Dimension((int) centerPanel.getSize().getWidth(),200));
+		add(scroller);
+	}
+}
 	class HirePanel extends JPanel {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -3284055168868495160L;
+
 		public HirePanel() {
 			dataInit();
 			nameF = new JTextField();
@@ -193,43 +291,39 @@ public class GUI extends JFrame {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					String name="", surname="";
-					int age=0;
-					double salary=0.00;
-					try{
-						name=nameF.getText();
-						surname=surnameF.getText();
-						salary=Double.parseDouble(salaryF.getText());
-						age=Integer.parseInt(ageF.getText());
-					}
-					catch(Exception exc){
+					String name = "", surname = "";
+					int age = 0;
+					double salary = 0.00;
+					try {
+						name = nameF.getText();
+						surname = surnameF.getText();
+						salary = Double.parseDouble(salaryF.getText());
+						age = Integer.parseInt(ageF.getText());
+					} catch (Exception exc) {
 						exc.printStackTrace();
-						
+						JOptionPane.showMessageDialog(getContentPane(), "Incorrect input data");
+
 					}
-					switch (professionsBox.getSelectedItem().toString()){
+					switch (professionsBox.getSelectedItem().toString()) {
 					case "Manager":
-						menedzeris.hireEmployee(new Manager(employeeList.size()+2, name, surname, age, salary, autoplacis));
-						revalidate();
-						repaint();
+						menedzeris.hireEmployee(
+								new Manager(employeeList.size() + 2, name, surname, age, salary, autoplacis));
+						JOptionPane.showMessageDialog(getContentPane(), "Manager hired");
 						break;
 					case "Salesperson":
-						menedzeris.hireEmployee(new Salesperson(employeeList.size()+2, name, surname, age, salary));
-						revalidate();
-						repaint();
+						menedzeris.hireEmployee(new Salesperson(employeeList.size() + 2, name, surname, age, salary));
+						JOptionPane.showMessageDialog(getContentPane(), "Salesperson hired");
 						break;
-					case"Supplier":
-						menedzeris.hireEmployee(new Supplier(employeeList.size()+2, name, surname, age, salary));
-						revalidate();
-						repaint();
+					case "Supplier":
+						menedzeris.hireEmployee(new Supplier(employeeList.size() + 2, name, surname, age, salary));
+						JOptionPane.showMessageDialog(getContentPane(), "Supplier hired");
 						break;
 					case "Cleaner":
-						menedzeris.hireEmployee(new Cleaner(employeeList.size()+2, name, surname, age, salary));
-						revalidate();
-						repaint();
+						menedzeris.hireEmployee(new Cleaner(employeeList.size() + 2, name, surname, age, salary));
+						JOptionPane.showMessageDialog(getContentPane(), "Cleaner hired");
 						break;
-					
+
 					}
-				
 
 				}
 
@@ -252,12 +346,16 @@ public class GUI extends JFrame {
 			actionB.setMinimumSize(new Dimension(70, 70));
 			add(actionB);
 			add(new JPanel());
-		
 
 		}
 	}
 
 	class FirePanel extends JPanel {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 7491925401004026271L;
+
 		public FirePanel() {
 			dataInit();
 			String[] empList = new String[employeeList.size()];
@@ -265,29 +363,56 @@ public class GUI extends JFrame {
 				empList[i] = employeeList.get(i).getName() + " " + employeeList.get(i).getSurname() + " "
 						+ employeeList.get(i).getProfession();
 			}
-			setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+			setLayout(new GridLayout(5, 1));
 			JComboBox employeeBox = new JComboBox(empList);
 			employeeBox.setAlignmentX(Component.CENTER_ALIGNMENT);
-
+			JPanel panel = new JPanel();
 			actionB = new JButton("FIRE");
 			actionB.setAlignmentX(Component.CENTER_ALIGNMENT);
+			actionB.setPreferredSize(new Dimension(120, 30));
 			actionB.addActionListener(new ActionListener() {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					menedzeris.fireEmployee(employeeList.get(employeeBox.getSelectedIndex()));
-					revalidate();
+					
+					int index=employeeBox.getSelectedIndex(),size=0;
+					Employee employee=employeeList.get(index);
+					String prof=employee.getProfession();
+					for(Employee emp: employeeList)
+						if(emp.getProfession()==prof)
+							size++;
+					if(size>1){
+					menedzeris.fireEmployee(employee);
+					dataInit();
+					employeeBox.removeItem(employeeBox.getSelectedItem());
+					JOptionPane.showMessageDialog(getContentPane(), "Employee fired");
 					repaint();
+					revalidate();}
+					else JOptionPane.showMessageDialog(getContentPane(), "Can't fire last employee of this profession");
+					
+					
 				}
 
 			});
-			add(employeeBox);
-			add(actionB);
+			add(new JPanel());
+			add(new JPanel());
+
+			panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
+			panel.add(employeeBox);
+			panel.add(actionB);
+			add(panel);
+			add(new JPanel());
+			add(new JPanel());
 
 		}
 	}
 
 	class BaseVehicle extends JPanel {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -8308353125659384293L;
+
 		public BaseVehicle() {
 			setLayout(new GridLayout(2, 2));
 			JLabel nameL = new JLabel("Name");
@@ -304,9 +429,14 @@ public class GUI extends JFrame {
 	}
 
 	class BaseCar extends JPanel {
-		
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -4670792200826933311L;
+
 		public BaseCar() {
-			JPanel vehicle=new JPanel();
+			JPanel vehicle = new JPanel();
 			vehicle.setLayout(new GridLayout(2, 2));
 			JLabel nameL = new JLabel("Name");
 			JLabel priceL = new JLabel("Price");
@@ -318,14 +448,14 @@ public class GUI extends JFrame {
 			vehicle.add(nameCF);
 			vehicle.add(priceL);
 			vehicle.add(priceCF);
-			setLayout(new GridLayout(2, 1));
+			setLayout(new GridLayout(3, 1));
 			add(vehicle);
-			
+
 			JPanel grid = new JPanel();
 			grid.setLayout(new GridLayout(2, 2));
 			JLabel trunkL = new JLabel("Trunk Volume");
 			JLabel seatsL = new JLabel("Seats");
-			JTextField	trunkF = new JTextField();
+			JTextField trunkF = new JTextField();
 			JTextField seatsF = new JTextField();
 			trunkL.setAlignmentX(Label.CENTER_ALIGNMENT);
 			seatsF.setAlignmentX(Label.CENTER_ALIGNMENT);
@@ -333,9 +463,10 @@ public class GUI extends JFrame {
 			grid.add(trunkF);
 			grid.add(seatsL);
 			grid.add(seatsF);
-			
+
 			add(grid);
-			actionB=new JButton("Register");
+
+			actionB = new JButton("Register");
 			actionB.setAlignmentX(CENTER_ALIGNMENT);
 			actionB.addActionListener(new ActionListener() {
 
@@ -345,33 +476,68 @@ public class GUI extends JFrame {
 					Double price;
 					float volume;
 					int seats;
-					try{
-						System.out.println(seatsF.getText());
-						System.out.println(priceCF.getText());
-						System.out.println(nameCF.getText());
-					
-						price=Double.parseDouble(priceCF.getText());
-						name=nameCF.getText();
-						volume=Float.parseFloat(trunkF.getText());
-						seats=Integer.parseInt(priceCF.getText());
-						supplierList.get(suppBox.getSelectedIndex()).supplyCar(new Car(vehicleList.size()+2, name,price, seats, volume));
-						System.out.println("Car");
-					}
-					catch(Exception exc){
+					try {
+
+						price = Double.parseDouble(priceCF.getText());
+						name = nameCF.getText();
+						volume = Float.parseFloat(trunkF.getText());
+						seats = Integer.parseInt(priceCF.getText());
+						supplierList.get(suppBox.getSelectedIndex())
+								.supplyCar(new Car(vehicleList.size() + 2, name, price, seats, volume));
+						JOptionPane.showMessageDialog(getContentPane(), "Car added");
+					} catch (Exception exc) {
 						exc.printStackTrace();
-						System.out.println("Shit");
-						
+						JOptionPane.showMessageDialog(getContentPane(), "Incorrect input data.");
+
 					}
 				}
 			});
-			add(actionB);
+			JPanel buttonP = new JPanel();
+			buttonP.setLayout(new FlowLayout());
+			buttonP.add(actionB);
+			add(buttonP);
 		}
 
 	}
 
 	class SportsCarPanel extends JPanel {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 5052959313653659340L;
+
 		public SportsCarPanel() {
 			setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+
+			JPanel vehicle = new JPanel();
+			vehicle.setLayout(new GridLayout(2, 2));
+			JLabel nameL = new JLabel("Name");
+			JLabel priceL = new JLabel("Price");
+			JTextField nameCF = new JTextField();
+			JTextField priceCF = new JTextField();
+			nameL.setAlignmentX(Label.CENTER_ALIGNMENT);
+			priceL.setAlignmentX(Label.CENTER_ALIGNMENT);
+			vehicle.add(nameL);
+			vehicle.add(nameCF);
+			vehicle.add(priceL);
+			vehicle.add(priceCF);
+
+			JPanel grid = new JPanel();
+			grid.setLayout(new GridLayout(2, 2));
+			JLabel trunkL = new JLabel("Trunk Volume");
+			JLabel seatsL = new JLabel("Seats");
+			JTextField trunkF = new JTextField();
+			JTextField seatsF = new JTextField();
+			trunkL.setAlignmentX(Label.CENTER_ALIGNMENT);
+			seatsF.setAlignmentX(Label.CENTER_ALIGNMENT);
+			grid.add(trunkL);
+			grid.add(trunkF);
+			grid.add(seatsL);
+			grid.add(seatsF);
+			JPanel baseCar = new JPanel();
+			baseCar.setLayout(new GridLayout(2, 1));
+			baseCar.add(vehicle);
+			baseCar.add(grid);
 			JLabel speedL = new JLabel("Max speed");
 			JLabel legalL = new JLabel("Street legal");
 			JTextField speedF = new JTextField();
@@ -383,51 +549,132 @@ public class GUI extends JFrame {
 			panel.add(speedF);
 			panel.add(legalL);
 			panel.add(legalBox);
-			JPanel car = new BaseCar();
-			car.remove(actionB);
-			add(car);
+
+			// baseCar.remove(actionB);
+			add(baseCar);
 			add(panel);
-			actionB=new JButton("Register");
+			actionB = new JButton("Register");
 			actionB.setAlignmentX(CENTER_ALIGNMENT);
-			add(actionB);
-			
-		}
-	}
-   class BaseSportsBike extends JPanel{
-	   private final String[] possibleClassifications = { "Lightweight", "Middleweight", "Superbike" };
-	   public BaseSportsBike(){
-		   setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-		   JPanel panel=new JPanel();
-		   panel.setLayout(new GridLayout(2,3));
-		   JLabel engineL=new JLabel("Engine Volume");
-		   JLabel speedL=new JLabel("Max Speed");
-		   JLabel classificationL=new JLabel("Class");
-		   JTextField engineF=new JTextField();
-		   JTextField speedF=new JTextField();
-		   JComboBox classificationBox= new JComboBox(possibleClassifications);
-		   panel.add(engineL);
-		   panel.add(speedL);
-		   panel.add(classificationL);
-		   panel.add(engineF);
-		   panel.add(speedF);
-		   panel.add(classificationBox);
-		   JPanel vehicle = new BaseVehicle();
-		   vehicle.remove(actionB);
-		   add(new BaseVehicle());
-		   add(panel);
-		   actionB=new JButton("Register");
-			actionB.setAlignmentX(CENTER_ALIGNMENT);
+			actionB.addActionListener(new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					String name;
+					Double price;
+					float volume;
+					int seats, speed;
+					boolean legal = false;
+					try {
+
+						price = Double.parseDouble(priceCF.getText());
+						name = nameCF.getText();
+						volume = Float.parseFloat(trunkF.getText());
+						seats = Integer.parseInt(priceCF.getText());
+						speed = Integer.parseInt(speedF.getText());
+						if (legalBox.getSelectedIndex() == 0)
+							legal = true;
+						if (legalBox.getSelectedIndex() == 1)
+							legal = false;
+
+						supplierList.get(suppBox.getSelectedIndex()).supplyCar(
+								new SportsCar(vehicleList.size() + 2, name, price, seats, volume, speed, legal));
+						JOptionPane.showMessageDialog(getContentPane(), "Car added");
+					} catch (Exception exc) {
+						exc.printStackTrace();
+						JOptionPane.showMessageDialog(getContentPane(), "Incorrect input data.");
+
+					}
+				}
+			});
 			add(actionB);
 
-	   }
-   }
+		}
+	}
+
+	class BaseSportsBike extends JPanel {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -2080176734667890912L;
+		private final String[] possibleClassifications = { "Lightweight", "Middleweight", "Superbike" };
+
+		public BaseSportsBike() {
+
+			setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+			JPanel vehicle = new JPanel();
+			vehicle.setLayout(new GridLayout(2, 2));
+			JLabel nameL = new JLabel("Name");
+			JLabel priceL = new JLabel("Price");
+			JTextField nameCF = new JTextField();
+			JTextField priceCF = new JTextField();
+			nameL.setAlignmentX(Label.CENTER_ALIGNMENT);
+			priceL.setAlignmentX(Label.CENTER_ALIGNMENT);
+			vehicle.add(nameL);
+			vehicle.add(nameCF);
+			vehicle.add(priceL);
+			vehicle.add(priceCF);
+
+			JPanel panel = new JPanel();
+			panel.setLayout(new GridLayout(2, 3));
+			JLabel engineL = new JLabel("Engine Volume");
+			JLabel speedL = new JLabel("Max Speed");
+			JLabel classificationL = new JLabel("Class");
+			JTextField engineF = new JTextField();
+			JTextField speedF = new JTextField();
+			JComboBox classificationBox = new JComboBox(possibleClassifications);
+			panel.add(engineL);
+			panel.add(speedL);
+			panel.add(classificationL);
+			panel.add(engineF);
+			panel.add(speedF);
+			panel.add(classificationBox);
+			vehicle.remove(actionB);
+			add(vehicle);
+			add(panel);
+			actionB = new JButton("Register");
+			actionB.setAlignmentX(CENTER_ALIGNMENT);
+			actionB.addActionListener(new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					String name;
+					Double price;
+					int volume, speed;
+					String classification;
+					try {
+
+						price = Double.parseDouble(priceCF.getText());
+						name = nameCF.getText();
+						speed = Integer.parseInt(speedF.getText());
+						volume = Integer.parseInt(engineF.getText());
+						classification = classificationBox.getSelectedItem().toString();
+						supplierList.get(suppBox.getSelectedIndex()).supplyCar(
+								new SportsBike(vehicleList.size() + 2, name, price, volume, speed, classification));
+						JOptionPane.showMessageDialog(getContentPane(), "Bike added");
+					} catch (Exception exc) {
+						exc.printStackTrace();
+						JOptionPane.showMessageDialog(getContentPane(), "Incorrect input data.");
+
+					}
+				}
+			});
+			add(actionB);
+
+		}
+	}
+
 	class VehicleBought extends JPanel {
-		public VehicleBought(){
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -1436662458156782238L;
+
+		public VehicleBought() {
 			dataInit();
 			setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-			final String CAR= "Car";
-			final String SCAR="Sports car";
-			final String SBIKE="Sports bike";
+			final String CAR = "Car";
+			final String SCAR = "Sports car";
+			final String SBIKE = "Sports bike";
 			JPanel cards = new JPanel(new CardLayout());
 			JPanel card1 = new BaseCar();
 			JPanel card2 = new SportsCarPanel();
@@ -435,47 +682,48 @@ public class GUI extends JFrame {
 			cards.add(card1, CAR);
 			cards.add(card2, SCAR);
 			cards.add(card3, SBIKE);
-			
-			
-			JPanel comboBoxPane = new JPanel(); //use FlowLayout
-			String comboBoxItems[] = { "Car", "Sports car", "Sports bike"};
-			String suppliers[]=new String[supplierList.size()];
-			for(int i=0;i<suppliers.length;i++)
-				suppliers[i]=supplierList.get(i).getName()+" "+supplierList.get(i).getName();
+
+			JPanel comboBoxPane = new JPanel(); // use FlowLayout
+			String comboBoxItems[] = { "Car", "Sports car", "Sports bike" };
+			String suppliers[] = new String[supplierList.size()];
+			for (int i = 0; i < suppliers.length; i++)
+				suppliers[i] = supplierList.get(i).getName() + " " + supplierList.get(i).getSurname();
 			JComboBox cb = new JComboBox(comboBoxItems);
-			suppBox=new JComboBox(suppliers);
+			suppBox = new JComboBox(suppliers);
 			suppBox.setEditable(false);
 			cb.setEditable(false);
-			cb.addItemListener(new ItemListener(){
+			cb.addItemListener(new ItemListener() {
 
 				@Override
 				public void itemStateChanged(ItemEvent e) {
 					// TODO Auto-generated method stub
-					 CardLayout cl = (CardLayout)(cards.getLayout());
-					    cl.show(cards, (String)e.getItem());
+					CardLayout cl = (CardLayout) (cards.getLayout());
+					cl.show(cards, (String) e.getItem());
 				}
-				
+
 			});
 			comboBoxPane.add(cb);
 			comboBoxPane.add(suppBox);
-			
-		
-    		
+
 			add(comboBoxPane, BorderLayout.PAGE_START);
 			add(cards, BorderLayout.CENTER);
-    		
 
-	}
+		}
 	}
 
 	class CarSold extends JPanel {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -4791224124125206360L;
+
 		public CarSold() {
 			dataInit();
 			String[] carList = new String[vehicleList.size()];
 			for (int i = 0; i < carList.length; i++) {
 				carList[i] = vehicleList.get(i).getName() + " " + vehicleList.get(i).getPrice();
 			}
-			setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+			setLayout(new GridLayout(2, 1));
 			JComboBox carBox = new JComboBox(carList);
 			carBox.setAlignmentX(Component.CENTER_ALIGNMENT);
 			String[] salesP = new String[salepersonList.size()];
@@ -490,24 +738,44 @@ public class GUI extends JFrame {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					salepersonList.get(salespersonBox.getSelectedIndex()).sellVehicle(vehicleList.get(carBox.getSelectedIndex()));
+					salepersonList.get(salespersonBox.getSelectedIndex())
+							.sellVehicle(vehicleList.get(carBox.getSelectedIndex()));
+					dataInit();
+					JOptionPane.showMessageDialog(getContentPane(), "Car sold");
+					carBox.removeItem(carBox.getSelectedItem());
+					if(carBox.getItemCount()<1)
+						actionB.setEnabled(false);
+					repaint();
+					revalidate();
 
 				}
 
 			});
 			JPanel panel1 = new JPanel();
-			panel1.setLayout(new GridLayout(4, 1));
+			panel1.setLayout(new GridLayout(6, 1));
 			Label sellerL = new Label("Seller");
 			sellerL.setAlignment(Label.CENTER);
 			Label vehicleL = new Label("Sold vehicle");
 			vehicleL.setAlignment(Label.CENTER);
+			panel1.add(new JPanel());
 			panel1.add(sellerL);
 			panel1.add(salespersonBox);
 			panel1.add(vehicleL);
 			panel1.add(carBox);
+			panel1.add(new JPanel());
 
 			add(panel1);
-			add(actionB);
+			JPanel buttonP = new JPanel();
+			buttonP.setLayout(new GridLayout(5, 3));
+			for (int i = 0; i < 15; i++) {
+				if (i == 1)
+					buttonP.add(actionB);
+				else
+					buttonP.add(new JPanel());
+			}
+
+			add(buttonP);
+
 		}
 	}
 }
